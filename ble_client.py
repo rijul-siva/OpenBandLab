@@ -1,16 +1,24 @@
 import asyncio
-# pyrefly: ignore [missing-import]
 from bleak import BleakClient
-ADDRESS="44:27:F3:21:47:BC"
+
+ADDRESS = "44:27:F3:21:47:BC"
+
+CHAR_50 = "00000050-0000-1000-8000-00805f9b34fb"
+
 
 async def main():
     async with BleakClient(ADDRESS) as client:
-        print(f"Connected to {client.address}")
-        for service in client.services:
-            print(f"service:{service.uuid}")
-            for characteristic in service.characteristics:
-                print(f"char:{characteristic.uuid}")
-                print(f"charproperties:{characteristic.properties}")
-                print()
-if __name__=="__main__":
-    asyncio.run(main()) 
+
+        print("Connected")
+
+        value = await client.read_gatt_char(CHAR_50)
+
+        print("Raw Bytes:")
+        print(value)
+
+        print("\nHex:")
+        print(value.hex())
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
